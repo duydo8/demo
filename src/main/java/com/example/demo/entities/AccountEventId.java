@@ -13,8 +13,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountEventId implements Serializable {
-    @Column(name="account_id",insertable = false,updatable = false)
+    @Column(name="account_id")
     private Long accountId;
-    @Column(name="event_id",insertable = false,updatable = false)
+    @Column(name="event_id")
     private  Long eventId;
 }

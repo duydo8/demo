@@ -6,27 +6,23 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="account_event")
 public class AccountEvent {
     @EmbeddedId
     private AccountEventId accountEventId;
-    @JsonIgnore
+
     @ManyToOne
-   @MapsId("accountId")
+    @MapsId("accountId")
     @JoinColumn(name="account_id")
     private  Account account = new Account();
-    @JsonIgnore
+
     @ManyToOne
     @MapsId("eventId")
     @JoinColumn(name="event_id")
     private   Event events = new Event();
-public  String toString(){
-    return "ae";
-}
+
 
 }

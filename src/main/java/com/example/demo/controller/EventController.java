@@ -81,27 +81,44 @@ public class EventController {
     }
 
     @PostMapping("addOneMemberInEvent")
-    public ResponseEntity<AccountEventDto> addOneMember(@RequestParam("idEvent") Long id, @RequestBody Account account){
+    public ResponseEntity<AccountEvent> addOneMember(@RequestParam("idEvent") Long id, @RequestBody Account account){
         Boolean check= accountService.checkEventIsPresent(id, account.getAccountId());
         Optional<Event> event= eventRepository.findById(id);
         if(event.isPresent()==true ) {
+
             //
             List<AccountEvent> accountEventList = account.getAccountEventList();
             if (accountEventList.size() == 0) {
                 // neu accountEvent ko co du lieu add thang vaof accountEvent
-                AccountEventId accountEventId = new AccountEventId(account.getAccountId(),id);
+                AccountEventId accountEventId = new AccountEventId();
+                accountEventId.setEventId(id);
+                accountEventId.setAccountId(account.getAccountId());
                 AccountEvent accountEvent= new AccountEvent();
+
+
+                // set event List
+                List<AccountEvent> defaultListEvent= event.get().getAccountEventList();
+
+                defaultListEvent.add(accountEvent);
+                event.get().setAccountEventList(defaultListEvent);
+// set accountEvent
                 accountEvent.setAccountEventId(accountEventId);
                 accountEvent.setEvents(event.get());
                 accountEvent.setAccount(account);
-                System.out.println(account +" \n "+ event.get()+" \n "+accountEventId);
+
+
                 accountEventList.add(accountEvent);
-                account.setAccountEventList(accountEventList);
                 accountEventRepository.save(accountEvent);
+                account.setAccountEventList(accountEventList);
+
                 accountRepository.save(account);
+
+                eventRepository.save(event.get());
+
+
                 AccountEventDto accountEventDto= new AccountEventDto();
                 BeanUtils.copyProperties(accountEvent,accountEventDto);
-                return ResponseEntity.ok().body(accountEventDto);
+                return ResponseEntity.ok().body(accountEvent);
             } else {
 //            List<Event>eventList=accountEventList.stream().filter(accountEvent -> accountEvent.getEvents()).collect(Collectors.toList());
                 List<Event> eventList = new ArrayList<>();
@@ -111,7 +128,7 @@ public class EventController {
                 }
                 Boolean checkDuplicateEvent = eventService.checkTimeIsDuplicate(event.get().getDateCreate(), event.get().getDateEnd(), eventList);
                 if (check == true && checkDuplicateEvent == true) {
-                    return ResponseEntity.badRequest().body(new AccountEventDto());
+                    return ResponseEntity.badRequest().body(new AccountEvent());
                 } else {
                     AccountEvent accountEvent= new AccountEvent(new AccountEventId(account.getAccountId(),id),account,event.get());
                     accountEventList.add(accountEvent);
@@ -120,13 +137,13 @@ public class EventController {
                     accountRepository.save(account);
                     AccountEventDto accountEventDto= new AccountEventDto();
                     BeanUtils.copyProperties(accountEvent,accountEventDto);
-                    return ResponseEntity.ok().body(accountEventDto);
+                    return ResponseEntity.ok().body(accountEvent);
                 }
             }
 //
 
         }
-        return ResponseEntity.badRequest().body(new AccountEventDto());
+        return ResponseEntity.badRequest().body(new AccountEvent());
 
     }
 }
