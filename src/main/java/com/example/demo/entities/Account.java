@@ -25,11 +25,7 @@ public class Account {
     private String email;
     @JsonIgnore
     @OneToMany(mappedBy = "account")
-    private List<AccountEvent> accountEventList = new ArrayList<>() ;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "account")
-    private  List<RoleAccount> roleAccountList;
+    List<AccountEvent> accountEventList = new ArrayList<>() ;
 
 
 
