@@ -85,7 +85,6 @@ public class EventController {
         Boolean check= accountService.checkEventIsPresent(id, account.getAccountId());
         Optional<Event> event= eventRepository.findById(id);
         if(event.isPresent()==true ) {
-
             //
             List<AccountEvent> accountEventList = account.getAccountEventList();
             if (accountEventList.size() == 0) {
@@ -94,8 +93,6 @@ public class EventController {
                 accountEventId.setEventId(id);
                 accountEventId.setAccountId(account.getAccountId());
                 AccountEvent accountEvent= new AccountEvent();
-
-
                 // set event List
                 List<AccountEvent> defaultListEvent= event.get().getAccountEventList();
 
@@ -140,7 +137,6 @@ public class EventController {
                     return ResponseEntity.ok().body(accountEvent);
                 }
             }
-//
 
         }
         return ResponseEntity.badRequest().body(new AccountEvent());
