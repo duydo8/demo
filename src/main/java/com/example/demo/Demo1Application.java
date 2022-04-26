@@ -27,11 +27,11 @@ public class Demo1Application implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Khi chương trình chạy
         // Insert vào csdl một user.
-        Account account = new Account();
-        account.setUsername("duy123");
-        account.setPassword(passwordEncoder.encode("123456"));
-
-        accountRepository.save(account);
-        System.out.println(account);
+//        Account account = new Account();
+//        account.setUsername("duy123");
+//        account.setPassword(passwordEncoder.encode("123456"));
+//
+//        accountRepository.save(account);
+//        System.out.println(account);
     }
 }

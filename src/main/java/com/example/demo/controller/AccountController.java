@@ -6,6 +6,7 @@ import com.example.demo.repository.AccountRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class AccountController {
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @GetMapping("/list")
     public ResponseEntity<List<AccountDto>> findAll(){
         List<Account> accountList =  accountRepository.findAll();
@@ -32,6 +35,7 @@ public class AccountController {
 
     @PostMapping ("create")
     public ResponseEntity<AccountDto> create(@RequestBody  Account account){
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         account=accountRepository.save(account);
         AccountDto accountDto = new AccountDto();
         BeanUtils.copyProperties(account,accountDto);
